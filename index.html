@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Michal & Terka — 18. 7. 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #f7f2eb;
+      --warm: #e8dece;
+      --gold: #b89a6a;
+      --gold-light: #d4b98a;
+      --dark: #2c2416;
+      --mid: #6b5a3e;
+      --text: #3d3020;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--text);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      padding: 60px 20px;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(184,154,106,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 20%, rgba(184,154,106,0.08) 0%, transparent 50%),
+        var(--cream);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(184,154,106,0.07) 60px),
+        repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(184,154,106,0.07) 60px);
+      pointer-events: none;
+    }
+
+    .hero-ornament {
+      font-size: 1.1rem;
+      letter-spacing: 0.35em;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-family: 'Jost', sans-serif;
+      font-weight: 400;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.2s forwards;
+    }
+
+    .hero-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.4s forwards;
+    }
+    .hero-divider span { width: 80px; height: 1px; background: var(--gold); display: block; }
+    .hero-divider svg { width: 20px; height: 20px; fill: var(--gold); }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 10vw, 8rem);
+      font-weight: 300;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: var(--dark);
+      opacity: 0;
+      animation: fadeUp 1.2s ease 0.3s forwards;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-amp {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-style: italic;
+      color: var(--gold-light);
+      display: block;
+      margin: -8px 0;
+    }
+
+    .hero-date {
+      margin-top: 32px;
+      font-size: 0.85rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--mid);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.7s forwards;
+    }
+
+    .hero-location {
+      margin-top: 10px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      font-style: italic;
+      color: var(--gold);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 36px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.4s forwards;
+    }
+    .hero-scroll span {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    /* ── COUNTDOWN ── */
+    .countdown-section {
+      background: var(--dark);
+      padding: 70px 20px;
+      text-align: center;
+    }
+    .countdown-section h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--gold-light);
+      letter-spacing: 0.15em;
+      margin-bottom: 40px;
+    }
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: clamp(20px, 5vw, 60px);
+      flex-wrap: wrap;
+    }
+    .cd-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cd-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 8vw, 5.5rem);
+      font-weight: 300;
+      color: var(--cream);
+      line-height: 1;
+    }
+    .cd-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 6px;
+    }
+    .cd-sep {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.3;
+      align-self: flex-start;
+      padding-top: 10px;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 90px 20px;
+    }
+    .section-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 32px;
+      line-height: 1.15;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-text {
+      font-size: 1rem;
+      line-height: 1.85;
+      color: var(--mid);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      margin-top: 48px;
+      position: relative;
+      padding-left: 32px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+    }
+    .timeline-item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 6px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 0 3px var(--cream), 0 0 0 4px var(--gold-light);
+    }
+    .tl-time {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+    .tl-event {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.3rem;
+      color: var(--dark);
+    }
+    .tl-note {
+      font-size: 0.88rem;
+      color: var(--mid);
+      margin-top: 2px;
+    }
+
+    /* ── MAP BLOCK ── */
+    .map-block {
+      background: var(--warm);
+      border-radius: 2px;
+      padding: 36px;
+      margin-top: 40px;
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+    .map-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+    }
+    .map-icon circle { fill: var(--gold); }
+    .map-icon path { fill: white; }
+    .map-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .map-info p { font-size: 0.9rem; color: var(--mid); line-height: 1.6; }
+    .map-link {
+      display: inline-block;
+      margin-top: 14px;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold-light);
+      padding-bottom: 2px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .map-link:hover { color: var(--dark); border-color: var(--dark); }
+
+    /* ── PHOTOS ── */
+    .photos-section {
+      background: var(--dark);
+      padding: 90px 20px;
+      text-align: center;
+    }
+    .photos-section .section-label { color: var(--gold-light); }
+    .photos-section .section-title { color: var(--cream); }
+    .photos-section .section-text { color: rgba(247,242,235,0.55); }
+    .upload-area {
+      margin-top: 48px;
+      border: 1px dashed rgba(184,154,106,0.4);
+      border-radius: 2px;
+      padding: 60px 30px;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .upload-area:hover { background: rgba(184,154,106,0.06); border-color: var(--gold); }
+    .upload-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 20px;
+      opacity: 0.5;
+    }
+    .upload-icon path { stroke: var(--gold-light); fill: none; stroke-width: 1.5; }
+    .upload-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-style: italic;
+      color: var(--cream);
+      margin-bottom: 10px;
+    }
+    .upload-sub {
+      font-size: 0.82rem;
+      color: rgba(247,242,235,0.4);
+      letter-spacing: 0.1em;
+    }
+    .upload-btn {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 14px 36px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      text-decoration: none;
+    }
+    .upload-btn:hover { background: var(--gold); color: var(--dark); }
+
+    /* ── RSVP ── */
+    .rsvp-section {
+      background: var(--warm);
+      padding: 90px 20px;
+    }
+    .rsvp-form {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 200px; }
+    .form-group label {
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--cream);
+      border: 1px solid rgba(184,154,106,0.3);
+      padding: 14px 16px;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.95rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s;
+      border-radius: 1px;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--gold); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-submit {
+      padding: 16px 48px;
+      background: var(--dark);
+      color: var(--cream);
+      border: none;
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      cursor: pointer;
+      align-self: flex-start;
+      transition: background 0.3s;
+    }
+    .form-submit:hover { background: var(--gold); }
+    .form-note {
+      font-size: 0.82rem;
+      color: var(--mid);
+      margin-top: -8px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 50px 20px;
+      text-align: center;
+      background: var(--dark);
+    }
+    .footer-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.8rem;
+      font-style: italic;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .footer-date {
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(247,242,235,0.3);
+    }
+
+    /* ── ORNAMENT LINE ── */
+    .ornament-line {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 40px 0;
+    }
+    .ornament-line::before,
+    .ornament-line::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-light));
+    }
+    .ornament-line::after {
+      background: linear-gradient(to left, transparent, var(--gold-light));
+    }
+    .ornament-line svg { width: 16px; height: 16px; fill: var(--gold); flex-shrink: 0; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.1); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 480px) {
+      .map-block { flex-direction: column; }
+      .form-submit { align-self: stretch; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-ornament">Zveme vás na naši svatbu</p>
+  <div class="hero-divider">
+    <span></span>
+    <svg viewBox="0 0 24 24"><path d="M12 21.593c-5.63-5.539-11-10.297-11-14.402 0-3.791 3.068-5.191 5.281-5.191 1.312 0 4.151.501 5.719 4.457 1.59-3.968 4.464-4.447 5.726-4.447 2.54 0 5.274 1.621 5.274 5.181 0 4.069-5.136 8.625-11 14.402z"/></svg>
+    <span></span>
+  </div>
+  <h1>
+    <em>Michal</em>
+    <span class="hero-amp">&amp;</span>
+    <em>Terka</em>
+  </h1>
+  <p class="hero-date">18. července 2026</p>
+  <p class="hero-location">Pivovar Lindr, Mžany</p>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- COUNTDOWN -->
+<div class="countdown-section">
+  <h2>Do velkého dne zbývá</h2>
+  <div class="countdown">
+    <div class="cd-item">
+      <span class="cd-number" id="cd-days">—</span>
+      <span class="cd-label">Dní</span>
+    </div>
+    <div class="cd-sep">·</div>
+    <div class="cd-item">
+      <span class="cd-number" id="cd-hours">—</span>
+      <span class="cd-label">Hodin</span>
+    </div>
+    <div class="cd-sep">·</div>
+    <div class="cd-item">
+      <span class="cd-number" id="cd-minutes">—</span>
+      <span class="cd-label">Minut</span>
+    </div>
+    <div class="cd-sep">·</div>
+    <div class="cd-item">
+      <span class="cd-number" id="cd-seconds">—</span>
+      <span class="cd-label">Sekund</span>
+    </div>
+  </div>
+</div>
+
+<!-- PROGRAM -->
+<section>
+  <div class="section-inner reveal">
+    <p class="section-label">Program dne</p>
+    <h2 class="section-title">Jak to <em>celé proběhne</em></h2>
+    <p class="section-text">
+      Těšíme se, že tento den prožijeme společně s vámi. Tady je hrubý přehled toho, co vás čeká.
+    </p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <p class="tl-time">14:00</p>
+        <p class="tl-event">Příjezd hostů</p>
+        <p class="tl-note">Uvítací drink na dvoře pivovaru</p>
+      </div>
+      <div class="timeline-item">
+        <p class="tl-time">15:00</p>
+        <p class="tl-event">Obřad</p>
+        <p class="tl-note">Slavnostní slib, Pivovar Lindr</p>
+      </div>
+      <div class="timeline-item">
+        <p class="tl-time">16:00</p>
+        <p class="tl-event">Focení & volná zábava</p>
+        <p class="tl-note">Promenáda po pivovaru, výčep</p>
+      </div>
+      <div class="timeline-item">
+        <p class="tl-time">18:00</p>
+        <p class="tl-event">Slavnostní večeře</p>
+        <p class="tl-note">Hostina a přípitky</p>
+      </div>
+      <div class="timeline-item">
+        <p class="tl-time">20:00</p>
+        <p class="tl-event">Tanec & oslava</p>
+        <p class="tl-note">Hudba, dort, dlouhá noc</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MÍSTO -->
+<section style="background: var(--warm); padding: 90px 20px;">
+  <div class="section-inner reveal">
+    <p class="section-label">Kde nás najdete</p>
+    <h2 class="section-title">Pivovar <em>Lindr</em></h2>
+    <p class="section-text">
+      Historický pivovar v malebných Mžanech — ideální místo pro slavnost, která se nezapomíná.
+    </p>
+
+    <div class="map-block">
+      <svg class="map-icon" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="20"/>
+        <path d="M20 10c-3.86 0-7 3.14-7 7 0 5.25 7 13 7 13s7-7.75 7-13c0-3.86-3.14-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+      </svg>
+      <div class="map-info">
+        <h3>Pivovar Lindr, Mžany</h3>
+        <p>Mžany, okres Hradec Králové<br>Parkování přímo u areálu k dispozici.</p>
+        <a class="map-link" href="https://maps.google.com/?q=Pivovar+Lindr+Mžany" target="_blank">Otevřít v Mapách →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOTKY -->
+<section class="photos-section">
+  <div class="section-inner reveal">
+    <p class="section-label">Vzpomínky</p>
+    <h2 class="section-title" style="color: var(--cream);">Podělte se o <em style="color: var(--gold);">fotky</em></h2>
+    <p class="section-text">
+      Zachytili jste krásný moment? Nahrajte nám ho — rádi se podíváme na den očima vašich.
+    </p>
+
+    <div class="upload-area" id="uploadArea">
+      <svg class="upload-icon" viewBox="0 0 48 48">
+        <path d="M24 32V16M16 24l8-8 8 8M8 36h32M12 36a4 4 0 01-4-4V16a4 4 0 014-4h24a4 4 0 014 4v16a4 4 0 01-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="upload-title">Nahrát fotografie</p>
+      <p class="upload-sub">JPG, PNG, HEIC · max. 20 MB na soubor</p>
+      <!-- SEM PŘIJDE ODKAZ NA GOOGLE PHOTOS / DRIVE -->
+      <a class="upload-btn" href="VÁŠ_ODKAZ_NA_SDÍLENÉ_ALBUM" target="_blank">Přidat fotky</a>
+    </div>
+  </div>
+</section>
+
+<!-- RSVP -->
+<section class="rsvp-section">
+  <div class="section-inner reveal">
+    <p class="section-label">Potvrďte účast</p>
+    <h2 class="section-title">Přijdete <em>mezi nás?</em></h2>
+    <p class="section-text">
+      Prosíme o potvrzení účasti do <strong>30. dubna 2026</strong>. Pomůžete nám s přípravami.
+    </p>
+
+    <!-- SEM PŘIJDE VÁŠE FORM ACTION Z GOOGLE APPS SCRIPT -->
+    <form class="rsvp-form" id="rsvpForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Jméno a příjmení</label>
+          <input type="text" name="name" placeholder="Jana Nováková" required/>
+        </div>
+        <div class="form-group">
+          <label>E-mail</label>
+          <input type="email" name="email" placeholder="jana@email.cz"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Účast</label>
+          <select name="attendance" required>
+            <option value="">Vyberte...</option>
+            <option value="ano">✓ Přijdu</option>
+            <option value="ne">✗ Nepřijdu</option>
+            <option value="mozna">? Nejsem si jistý/á</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Počet osob</label>
+          <select name="count">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4+</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Vzkaz pro novomanžele</label>
+        <textarea name="message" placeholder="Volitelně..."></textarea>
+      </div>
+      <div id="formMsg" style="display:none; padding:14px 20px; font-size:0.9rem; margin-top:4px;"></div>
+      <button type="submit" class="form-submit" id="submitBtn">Odeslat odpověď</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p class="footer-names">Michal & Terka</p>
+  <p class="footer-date">18. července 2026 · Pivovar Lindr, Mžany</p>
+</footer>
+
+<script>
+  // Countdown
+  function updateCountdown() {
+    const wedding = new Date('2026-07-18T15:00:00');
+    const now = new Date();
+    const diff = wedding - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '0';
+      document.getElementById('cd-minutes').textContent = '0';
+      document.getElementById('cd-seconds').textContent = '0';
+      return;
+    }
+    const d = Math.floor(diff / 86400000);
+    const h = Math.floor((diff % 86400000) / 3600000);
+    const m = Math.floor((diff % 3600000) / 60000);
+    const s = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent = d;
+    document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
+    document.getElementById('cd-minutes').textContent = String(m).padStart(2,'0');
+    document.getElementById('cd-seconds').textContent = String(s).padStart(2,'0');
+  }
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // RSVP Form
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx7ffbPVOcFk9OS55mtRKXl0i6D0ll-mr6kN-8cjWiyYWOUs-mCeMJ74Xr9VEUsUYw15w/exec';
+  const form = document.getElementById('rsvpForm');
+  const msg = document.getElementById('formMsg');
+  const btn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    btn.textContent = 'Odesílám...';
+    btn.disabled = true;
+    const data = {
+      name: form.name.value,
+      email: form.email.value,
+      attendance: form.attendance.value,
+      count: form.count.value,
+      message: form.message.value
+    };
+    try {
+      await fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      msg.style.display = 'block';
+      msg.style.color = 'var(--gold)';
+      msg.textContent = '✓ Děkujeme! Vaši odpověď jsme přijali.';
+      form.reset();
+    } catch (err) {
+      msg.style.display = 'block';
+      msg.style.color = '#c0392b';
+      msg.textContent = '✗ Něco se pokazilo. Zkuste to prosím znovu.';
+    }
+    btn.textContent = 'Odeslat odpověď';
+    btn.disabled = false;
+  });
+
+  // Scroll reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
