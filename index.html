@@ -617,61 +617,14 @@
       <p class="upload-title">Nahrát fotografie</p>
       <p class="upload-sub">JPG, PNG, HEIC · max. 20 MB na soubor</p>
       <!-- SEM PŘIJDE ODKAZ NA GOOGLE PHOTOS / DRIVE -->
-      <a class="upload-btn" href="VÁŠ_ODKAZ_NA_SDÍLENÉ_ALBUM" target="_blank">Přidat fotky</a>
+      <input type="file" id="fileInput" accept="image/*" multiple style="display:none"/>
+      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">Vybrat fotky</button>
+      <div id="uploadProgress" style="margin-top:20px; font-size:0.85rem; color:rgba(247,242,235,0.6);"></div>
     </div>
   </div>
 </section>
 
-<!-- RSVP -->
-<section class="rsvp-section">
-  <div class="section-inner reveal">
-    <p class="section-label">Potvrďte účast</p>
-    <h2 class="section-title">Přijdete <em>mezi nás?</em></h2>
-    <p class="section-text">
-      Prosíme o potvrzení účasti do <strong>30. dubna 2026</strong>. Pomůžete nám s přípravami.
-    </p>
 
-    <!-- SEM PŘIJDE VÁŠE FORM ACTION Z GOOGLE APPS SCRIPT -->
-    <form class="rsvp-form" id="rsvpForm">
-      <div class="form-row">
-        <div class="form-group">
-          <label>Jméno a příjmení</label>
-          <input type="text" name="name" placeholder="Jana Nováková" required/>
-        </div>
-        <div class="form-group">
-          <label>E-mail</label>
-          <input type="email" name="email" placeholder="jana@email.cz"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label>Účast</label>
-          <select name="attendance" required>
-            <option value="">Vyberte...</option>
-            <option value="ano">✓ Přijdu</option>
-            <option value="ne">✗ Nepřijdu</option>
-            <option value="mozna">? Nejsem si jistý/á</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Počet osob</label>
-          <select name="count">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4+</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Vzkaz pro novomanžele</label>
-        <textarea name="message" placeholder="Volitelně..."></textarea>
-      </div>
-      <div id="formMsg" style="display:none; padding:14px 20px; font-size:0.9rem; margin-top:4px;"></div>
-      <button type="submit" class="form-submit" id="submitBtn">Odeslat odpověď</button>
-    </form>
-  </div>
-</section>
 
 <!-- FOOTER -->
 <footer>
@@ -704,42 +657,47 @@
   updateCountdown();
   setInterval(updateCountdown, 1000);
 
-  // RSVP Form
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx7ffbPVOcFk9OS55mtRKXl0i6D0ll-mr6kN-8cjWiyYWOUs-mCeMJ74Xr9VEUsUYw15w/exec';
-  const form = document.getElementById('rsvpForm');
-  const msg = document.getElementById('formMsg');
-  const btn = document.getElementById('submitBtn');
+  // Photo upload
+  const UPLOAD_URL = 'https://script.google.com/macros/s/AKfycbxxeUOK1iyAMtfgaK3GfMYxBMYVfxvlmmxQ7HGWXd1bukTSaGBigQ1qTq5aWaTto8nqYQ/exec';
+  const fileInput = document.getElementById('fileInput');
+  const progress = document.getElementById('uploadProgress');
 
-  form.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    btn.textContent = 'Odesílám...';
-    btn.disabled = true;
-    const data = {
-      name: form.name.value,
-      email: form.email.value,
-      attendance: form.attendance.value,
-      count: form.count.value,
-      message: form.message.value
-    };
-    try {
-      await fetch(SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      msg.style.display = 'block';
-      msg.style.color = 'var(--gold)';
-      msg.textContent = '✓ Děkujeme! Vaši odpověď jsme přijali.';
-      form.reset();
-    } catch (err) {
-      msg.style.display = 'block';
-      msg.style.color = '#c0392b';
-      msg.textContent = '✗ Něco se pokazilo. Zkuste to prosím znovu.';
+  fileInput.addEventListener('change', async function() {
+    const files = Array.from(this.files);
+    if (!files.length) return;
+    progress.textContent = '';
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      progress.style.color = 'rgba(247,242,235,0.6)';
+      progress.textContent = 'Nahrávám ' + (i + 1) + ' / ' + files.length + ': ' + file.name + '…';
+      try {
+        const base64 = await toBase64(file);
+        const body = new FormData();
+        body.append('data', base64.split(',')[1]);
+        body.append('mimeType', file.type);
+        body.append('fileName', file.name);
+        await fetch(UPLOAD_URL, { method: 'POST', mode: 'no-cors', body });
+      } catch (err) {
+        progress.style.color = '#c0392b';
+        progress.textContent = 'Chyba při nahrávání ' + file.name;
+        return;
+      }
     }
-    btn.textContent = 'Odeslat odpověď';
-    btn.disabled = false;
+    progress.style.color = 'var(--gold-light)';
+    const n = files.length;
+    progress.textContent = (n === 1 ? '✓ 1 fotka nahrána.' : '✓ ' + n + ' fotek nahráno.') + ' Děkujeme!';
+    fileInput.value = '';
   });
+
+  function toBase64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result);
+      r.onerror = () => rej(new Error('Chyba'));
+      r.readAsDataURL(file);
+    });
+  }
 
   // Scroll reveal
   const observer = new IntersectionObserver(entries => {
